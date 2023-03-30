@@ -1,5 +1,5 @@
 #include "rocket.h"
-#include "../global.h"
+#include "../../global.h"
 
 byte rocket_l[] = {
   B00000,
@@ -22,9 +22,9 @@ byte rocket_u[] = {
   B00000,
   B00000
 };
-uint8_t oldPos = 0;
 
-void drawRocket() {
+
+void Rocket::drawRocket() {
   uint8_t pos = 4 - map(analogRead(A0), 0, 1024, 1, 5);
 
   lcd.createChar(1, pos&1? rocket_l: rocket_u);
@@ -42,6 +42,6 @@ void drawRocket() {
   lcd.write(1);
 }
 
-uint8_t getRocketPos() {
+uint8_t Rocket::getRocketPos() {
   return oldPos;
 }

@@ -4,3 +4,5 @@
 extern Asteroid* asteroids;
 
 extern int levelSize;
+
+void setLevel();

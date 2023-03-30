@@ -1,5 +1,5 @@
 #include "asteroids.h"
-#include "../global.h"
+#include "../../global.h"
 #include "asteroids_level.h"
 
 #define sprite_high 2
@@ -9,13 +9,15 @@
 #include "asteroids_level.h"
 #include "asteroids_sprites.h"
 
+bool gameOver = false;
 
 void setupAsteroids() {
     lcd.createChar(sprite_high, asteroid_h);
     lcd.createChar(sprite_low, asteroid_l);
     lcd.createChar(sprite_full, asteroid_full);
-
+    setLevel();
     drawAsteroids();
+    gameOver = false;
 }
 
 void drawAsteroids() {
@@ -39,7 +41,6 @@ void drawAsteroids() {
     }
 }
 
-bool gameOver = false;
 
 bool checkGameOver(u_int8_t rocketPos) {
     if (!gameOver) {
