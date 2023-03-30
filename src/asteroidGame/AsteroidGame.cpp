@@ -17,7 +17,8 @@ bool AsteroidGame::play() {
             if (millis() > lastMilis + 500) {
                 lastMilis = millis();
                 drawAsteroids();
-                //check if game is won
+                rocket.setCheckOverlaping(true);
+                // check if game is won
                 if (noAsteroidsLeft()) {
                     music.stopMusic();
                     return true;
