@@ -9,6 +9,16 @@
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
+void printLevel(int level, int x, String gameName) {
+  lcd.clear();
+  lcd.setCursor(4, 0);
+  lcd.print("Level ");
+  lcd.print(level);
+  lcd.setCursor(x, 1);
+  lcd.print(gameName);
+  delay(2000);
+}
+
 void setup() {
   lcd.init();
   lcd.backlight();
@@ -16,12 +26,7 @@ void setup() {
   pinMode(A0, INPUT);
 
   // asteroidGame
-  lcd.clear();
-  lcd.setCursor(4, 0);
-  lcd.print("Level 1");
-  lcd.setCursor(3, 1);
-  lcd.print("Asteroids");
-  delay(2000);
+  printLevel(1, 3, "Asteroids");
   bool wonAsteroidGame = false;
   while (!wonAsteroidGame)
   {
@@ -31,12 +36,7 @@ void setup() {
   }
 
   // simonGame
-    lcd.clear();
-  lcd.setCursor(4, 0);
-  lcd.print("Level 2");
-  lcd.setCursor(3, 1);
-  lcd.print("Simon Says");
-  delay(2000);
+  printLevel(2, 3, "Simon Says");
   bool wonSimonGame = false;
   while (!wonSimonGame)
   {
@@ -46,12 +46,7 @@ void setup() {
   }
 
   // snakeGame
-  lcd.clear();
-  lcd.setCursor(4, 0);
-  lcd.print("Level 3");
-  lcd.setCursor(5, 1);
-  lcd.print("Snake");
-  delay(2000);
+  printLevel(3, 5, "Snake");
   bool wonSnakeGame = false;
   while (!wonSnakeGame)
   {
@@ -61,12 +56,7 @@ void setup() {
   }
 
   // numberStationGame
-  lcd.clear();
-  lcd.setCursor(4, 0);
-  lcd.print("Level 4");
-  lcd.setCursor(1, 1);
-  lcd.print("Number Station");
-  delay(2000);
+  printLevel(4, 1, "Number Station");
   bool wonNumberStationGame = false;
   while (!wonNumberStationGame)
   {
