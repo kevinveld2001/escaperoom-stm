@@ -21,3 +21,4 @@ void drawAsteroids();
 
 bool checkGameOver(u_int8_t rocketPos);
 
+bool noAsteroidsLeft();

@@ -69,3 +69,13 @@ bool checkGameOver(u_int8_t rocketPos) {
     }
     return gameOver;
 }
+
+
+bool noAsteroidsLeft() {
+    for (int i = 0; i < levelSize; i++) {
+        if (!asteroids[i].outOfScreen) {
+            return false;
+        }
+    }
+    return true;
+}

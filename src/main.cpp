@@ -18,8 +18,11 @@ void setup() {
     AsteroidGame* asteroidGame;
     wonAsteroidGame = asteroidGame->play();
     delete asteroidGame;
-    delay(3000);
   }
+
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("You won!");
   
 
 }
