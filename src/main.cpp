@@ -28,6 +28,10 @@ void setup() {
 
   pinMode(A0, INPUT);
 
+  //A5 is reading static noise, so we use it to seed the random number generator
+  pinMode(A5, INPUT);
+  randomSeed(analogRead(A5));
+
   // asteroidGame
   bool wonAsteroidGame = true;
   bool wonSimonGame = false;

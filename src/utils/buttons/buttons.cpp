@@ -25,12 +25,16 @@ void buttonScanLoop() {
     }
 }
 
-bool areButtonsPressed(uint8_t buttons) {
-    return (buttonsDown & buttons) == buttons;
+bool areButtonsPressed(uint8_t buttons, bool allSet) {
+    if (allSet)
+        return (buttonsDown & buttons) == buttons;
+    
+    //any button pressed    
+    return (buttonsDown & buttons);
 }
 
-bool areButtonsPressedEvent(uint8_t buttons) {
-    if (triggerEvent && areButtonsPressed(buttons)) {
+bool areButtonsPressedEvent(uint8_t buttons, bool allSet) {
+    if (triggerEvent && areButtonsPressed(buttons, allSet)) {
         triggerEvent = false;
         return true;
     }

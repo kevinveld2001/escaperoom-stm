@@ -2,5 +2,5 @@
 #include <global.h>
 
 void buttonScanLoop();
-bool areButtonsPressed(uint8_t buttons);
-bool areButtonsPressedEvent(uint8_t buttons);
+bool areButtonsPressed(uint8_t buttons, bool allSet);
+bool areButtonsPressedEvent(uint8_t buttons, bool allSet);
