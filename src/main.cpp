@@ -8,6 +8,7 @@
 
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
+TM1638plus tm(TM_STROBE, TM_CLOCK, TM_DIO);
 
 void printLevel(int level, int x, String gameName) {
   lcd.clear();
@@ -23,43 +24,47 @@ void setup() {
   lcd.init();
   lcd.backlight();
 
+  tm.displayBegin();
+
   pinMode(A0, INPUT);
 
   // asteroidGame
-  printLevel(1, 3, "Asteroids");
-  bool wonAsteroidGame = false;
+  bool wonAsteroidGame = true;
+  bool wonSimonGame = false;
+  bool wonSnakeGame = false;
+  bool wonNumberStationGame = false;
+
+
   while (!wonAsteroidGame)
   {
+    printLevel(1, 3, "Asteroids");
     AsteroidGame* asteroidGame;
     wonAsteroidGame = asteroidGame->play();
     delete asteroidGame;
   }
 
   // simonGame
-  printLevel(2, 3, "Simon Says");
-  bool wonSimonGame = false;
   while (!wonSimonGame)
   {
+    printLevel(2, 3, "Simon Says");
     SimonSaysGame* simonGame;
     wonSimonGame = simonGame->play();
     delete simonGame;
   }
 
   // snakeGame
-  printLevel(3, 5, "Snake");
-  bool wonSnakeGame = false;
   while (!wonSnakeGame)
   {
+    printLevel(3, 5, "Snake");
     SnakeGame* snakeGame;
     wonSnakeGame = snakeGame->play();
     delete snakeGame;
   }
 
   // numberStationGame
-  printLevel(4, 1, "Number Station");
-  bool wonNumberStationGame = false;
   while (!wonNumberStationGame)
   {
+    printLevel(4, 1, "Number Station");
     NumberStationGame* numberStationGame;
     wonNumberStationGame = numberStationGame->play();
     delete numberStationGame;
