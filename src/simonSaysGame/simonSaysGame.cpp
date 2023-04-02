@@ -64,12 +64,12 @@ bool SimonSaysGame::play() {
         if (areButtonsPressedEvent(gameLevel[pressIndex], true)) {
             pressIndex++;
             displayLed(gameLevel[pressIndex - 1]);
-            if (pressIndex == level
-            && level != 8) {
+            if (pressIndex == level) {
                 delay(1000);
                 addRandomStepToGame();
                 printLevel();
-                printGameLevel();
+                if (level != 8) 
+                    printGameLevel();
 
                 pressIndex = 0;
             }
