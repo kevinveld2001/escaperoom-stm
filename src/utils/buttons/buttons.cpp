@@ -25,6 +25,10 @@ void buttonScanLoop() {
     }
 }
 
+uint8_t getButtons() {
+    return buttonsDown;
+}
+
 bool areButtonsPressed(uint8_t buttons, bool allSet) {
     if (allSet)
         return (buttonsDown & buttons) == buttons;

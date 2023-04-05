@@ -34,7 +34,7 @@ void setup() {
 
   // asteroidGame
   bool wonAsteroidGame = true;
-  bool wonSimonGame = true;
+  bool wonSimonGame = false;
   bool wonSnakeGame = false;
   bool wonNumberStationGame = false;
 
