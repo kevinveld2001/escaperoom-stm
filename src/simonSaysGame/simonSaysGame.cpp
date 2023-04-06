@@ -19,6 +19,8 @@ void addRandomStepToGame() {
     level++;
 }
 
+long ledOnSince = 0;
+bool ledOn = false;
 void displayLed(u_int8_t leds) {
     tm.setLEDs(leds << 8);
     int note = 0;
@@ -36,17 +38,17 @@ void displayLed(u_int8_t leds) {
             note = 900;
             break;
     }
-    tone(buzzer_pin, note, 500);
-    delay(500);
-    tm.setLEDs(0);
-    
+    tone(buzzer_pin, note, 300);
+    ledOnSince = millis();
+    ledOn = true;
 }
 
+int letToPrint = 0;
+bool printLets = false;
+long lastPrintMillis = 0;
+
 void printGameLevel() {
-    for (int i = 0; i < level; i++) {
-        displayLed(gameLevel[i]);
-        delay(500);
-    }
+    printLets = true;
 }
 
 uint8_t pressIndex = 0;
@@ -59,23 +61,80 @@ void SimonSaysGame::setup() {
     printGameLevel();
 }
 
+bool waitCheck = false;
+long waitSince = 0;
+int waitTime = 0; 
+void wait(int time) {
+    waitTime = time;
+    waitSince = millis();
+    waitCheck = true;
+}
+
+
+int gameover = 0;
 void SimonSaysGame::loop() {
+    if (waitCheck) {
+        if (waitSince + waitTime < millis()) {
+            waitCheck = false;
+            printGameLevel();
+        }
+        return;
+    }
+
+    if (ledOn) {
+        if (ledOnSince + 300 < millis()) {
+            tm.setLEDs(0);
+            ledOn = false;
+        }
+        return;
+    }
+
     if (level == 8) {
         nextLevel();
         return;
     }
+
+    if (gameover == 1) {
+        tm.setLEDs(0);
+        gameover = 2;
+        wait(1500);
+        return;
+    }
+
+    if (gameover == 2) {
+        gameover = 0;
+        setGameOver();
+        return;
+    }
+
+    if (printLets) {
+        if (lastPrintMillis + 1000 < millis()) {
+            lastPrintMillis = millis();
+            displayLed(gameLevel[letToPrint]);
+            letToPrint++;
+            if (letToPrint == level) {
+                printLets = false;
+                letToPrint = 0;
+            }
+        }
+        return;
+    }
+    
+
+    if (pressIndex == level) {
+        addRandomStepToGame();
+        printLevel();
+        if (level != 8) 
+            printGameLevel();
+
+        pressIndex = 0;
+        wait(1000);
+        return;
+    }
+
     if (areButtonsPressedEvent(gameLevel[pressIndex], true)) {
         pressIndex++;
         displayLed(gameLevel[pressIndex - 1]);
-        if (pressIndex == level) {
-            delay(1000);
-            addRandomStepToGame();
-            printLevel();
-            if (level != 8) 
-                printGameLevel();
-
-            pressIndex = 0;
-        }
     } else if (areButtonsPressedEvent(~gameLevel[pressIndex], false)) {
         lcd.clear();
         lcd.setCursor(3, 0);
@@ -86,11 +145,10 @@ void SimonSaysGame::loop() {
 
         tm.setLEDs(255 << 8);
         tone(buzzer_pin, 1000, 500);
-        delay(500);
-        tm.setLEDs(0);
-        delay(1000);
-        setGameOver();
+        gameover = 1;
+        wait(500);
+        return;
     }
 
-        buttonScanLoop();
+    buttonScanLoop();
 }
