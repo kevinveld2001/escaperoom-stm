@@ -1,6 +1,8 @@
 #include <global.h>
 #include "playable.h"
 #include "menu.h"
+#include "levelPrinter.h"
+
 #include "./asteroidGame/asteroidGame.h"
 #include "./simonSaysGame/simonSaysGame.h"
 #include "./snakeGame/snakeGame.h"
@@ -19,6 +21,8 @@ void nextLevel() {
 void setGameOver() {
     initGame();
 }
+long timeTillGameStart = 0;
+bool hasRunSetup = false;
 
 void initGame() {
     delete currentLevel;
@@ -29,18 +33,32 @@ void initGame() {
         currentLevel = new Menu();
         break;
     case 1:
+        printLevel(1, 3, "Asteroids");
         currentLevel = new AsteroidGame();
         break;
     case 2:
+        printLevel(2, 3, "Simon Says");
         currentLevel = new SimonSaysGame();
         break;
     case 3:
+        printLevel(3, 5, "Snake");
         currentLevel = new SnakeGame();
         break;
+    case 4:
+        printLevel(4, 1, "Number Station");
+        break;
     }
-    currentLevel->setup();
+    timeTillGameStart = millis() + 2000;
+    hasRunSetup = false;
 }
 
 void runLoop() {
+    if (millis() < timeTillGameStart) {
+        return;
+    }
+    if (!hasRunSetup) {
+        currentLevel->setup();
+        hasRunSetup = true;
+    }
     currentLevel->loop();
 }
