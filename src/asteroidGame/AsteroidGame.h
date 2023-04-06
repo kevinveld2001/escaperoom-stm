@@ -2,16 +2,16 @@
 #include "rocket/rocket.h"
 #include "asteroids/asteroids.h"
 #include "music/music.h"
+#include "./utils/gameLevelUtil/playable.h"
 
-class AsteroidGame {
+class AsteroidGame: public Playable {
 private:
     Rocket rocket;
     Music music;
 public:
-    /**
-     * returns a boolean to indicate game is won or lost
-    */
-    bool play();
+    void setup() override;
+    void loop() override;
+
     ~AsteroidGame() {
         delete[] &rocket;
         delete[] &music;

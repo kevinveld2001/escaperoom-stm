@@ -15,3 +15,7 @@ extern TM1638plus tm;
 
 
 extern LiquidCrystal_I2C lcd;
+
+
+void nextLevel();
+void setGameOver();

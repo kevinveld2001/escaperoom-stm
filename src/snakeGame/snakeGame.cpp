@@ -70,9 +70,8 @@ bool SnakeGame::moveSnake() {
     return true;
 }
 
-
-bool SnakeGame::play() {
-    //setup
+long lastUpdate = millis();
+void SnakeGame::setup() {
     lcd.clear();
     lcd.setCursor(4, 0);
     lcd.print((char)255);
@@ -106,31 +105,28 @@ bool SnakeGame::play() {
 
     spawnFood();
 
-    long lastUpdate = millis();
-    //loop
-    while (true) {
-        
-        tm.setLEDs(direction << 8);;
-        uint8_t newDirection = getButtons() & 0b00001111;
-        if (newDirection != 0) {
-            Direction dir = bitesDirectionToStruct(direction);
-            Direction newDir = bitesDirectionToStruct(newDirection);
-            if ((dir.x - newDir.x) != 0 && (dir.y - newDir.y) != 0) {
-                direction = newDirection;
-            }
-        }
+    lastUpdate = millis();
+}
 
-        if (lastUpdate + 500 < millis()) {
-            lastUpdate = millis();
-            if (!moveSnake()) {
-                return false;
-            }
+void SnakeGame::loop() {
+    tm.setLEDs(direction << 8);;
+    uint8_t newDirection = getButtons() & 0b00001111;
+    if (newDirection != 0) {
+        Direction dir = bitesDirectionToStruct(direction);
+        Direction newDir = bitesDirectionToStruct(newDirection);
+        if ((dir.x - newDir.x) != 0 && (dir.y - newDir.y) != 0) {
+            direction = newDirection;
         }
-        
-        buttonScanLoop();
     }
 
-    return true;
+    if (lastUpdate + 500 < millis()) {
+        lastUpdate = millis();
+        if (!moveSnake()) {
+            setGameOver();
+        }
+    }
+    
+    buttonScanLoop();
 }
 
 bool SnakeGame::isColision(int x, int y) {

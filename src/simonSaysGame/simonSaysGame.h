@@ -1,9 +1,8 @@
 #pragma once
+#include "./utils/gameLevelUtil/playable.h"
 
-class SimonSaysGame {
+class SimonSaysGame: public Playable {
 public:
-    /**
-     * returns a boolean to indicate game is won or lost
-    */
-    bool play();
+    void setup() override;
+    void loop() override;
 };

@@ -1,14 +1,12 @@
 #pragma once
+#include "./utils/gameLevelUtil/playable.h"
 
-
-class SnakeGame {
+class SnakeGame: public Playable {
 private:
     void spawnFood();
     bool moveSnake();
     bool isColision(int x, int y);
 public:
-    /**
-     * returns a boolean to indicate game is won or lost
-    */
-    bool play();
+    void setup() override;
+    void loop() override;
 };

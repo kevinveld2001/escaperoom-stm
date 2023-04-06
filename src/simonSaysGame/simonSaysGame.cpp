@@ -51,45 +51,45 @@ void printGameLevel() {
 
 uint8_t pressIndex = 0;
 
-bool SimonSaysGame::play() {
-    //setup
+void SimonSaysGame::setup() {
     level = 0;
     pressIndex = 0;
     addRandomStepToGame();
     printLevel();
     printGameLevel();
+}
 
-    //loop
-    while (level < 8) {
-        if (areButtonsPressedEvent(gameLevel[pressIndex], true)) {
-            pressIndex++;
-            displayLed(gameLevel[pressIndex - 1]);
-            if (pressIndex == level) {
-                delay(1000);
-                addRandomStepToGame();
-                printLevel();
-                if (level != 8) 
-                    printGameLevel();
-
-                pressIndex = 0;
-            }
-        } else if (areButtonsPressedEvent(~gameLevel[pressIndex], false)) {
-            lcd.clear();
-            lcd.setCursor(3, 0);
-            lcd.print("Game Over");
-            lcd.setCursor(3, 1);
-            lcd.print("Score: ");
-            lcd.print(level);
-
-            tm.setLEDs(255 << 8);
-            tone(buzzer_pin, 1000, 500);
-            delay(500);
-            tm.setLEDs(0);
+void SimonSaysGame::loop() {
+    if (level == 8) {
+        nextLevel();
+    }
+    if (areButtonsPressedEvent(gameLevel[pressIndex], true)) {
+        pressIndex++;
+        displayLed(gameLevel[pressIndex - 1]);
+        if (pressIndex == level) {
             delay(1000);
-            return false;
+            addRandomStepToGame();
+            printLevel();
+            if (level != 8) 
+                printGameLevel();
+
+            pressIndex = 0;
         }
+    } else if (areButtonsPressedEvent(~gameLevel[pressIndex], false)) {
+        lcd.clear();
+        lcd.setCursor(3, 0);
+        lcd.print("Game Over");
+        lcd.setCursor(3, 1);
+        lcd.print("Score: ");
+        lcd.print(level);
+
+        tm.setLEDs(255 << 8);
+        tone(buzzer_pin, 1000, 500);
+        delay(500);
+        tm.setLEDs(0);
+        delay(1000);
+        setGameOver();
+    }
 
         buttonScanLoop();
-    }
-    return true;
-};
+}
