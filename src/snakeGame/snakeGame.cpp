@@ -14,12 +14,33 @@ struct SnakeBody {
 int foodXpos = 0;
 int foodYpos = 0;
 
+int snakeLevel = 0;
 
 SnakeBody snakeBodyBuffer[SNAKE_SIZE];
 u_int8_t direction = 0b00000010;
 u_int8_t grow = 0;
 int headIndex = 2;
 int tailIndex = 0;
+
+void drawSnakeLevel() {
+    lcd.setCursor(6, 1);
+    lcd.printf("Level: %02d", snakeLevel);
+}
+
+struct Direction {
+    int x;
+    int y;
+};
+
+Direction bitesDirectionToStruct(u_int8_t bitesDirection) {
+    Direction direction = {0, 0};
+    if (bitesDirection & 0b00001000) direction.x = 1;
+    if (bitesDirection & 0b00000100) direction.x = -1;
+    if (bitesDirection & 0b00000010) direction.y = 1;
+    if (bitesDirection & 0b00000001) direction.y = -1;
+    return direction;
+}
+
 
 bool SnakeGame::moveSnake() {
     if (grow == 0) {
@@ -32,23 +53,19 @@ bool SnakeGame::moveSnake() {
 
     SnakeBody oldHead = snakeBodyBuffer[headIndex];
     headIndex = (headIndex + 1) % SNAKE_SIZE;
+    Direction move = bitesDirectionToStruct(direction);
 
-    int moveX = 0;
-    int moveY = 0;
-    if (direction & 0b00001000) moveX = 1;
-    if (direction & 0b00000100) moveX = -1;
-    if (direction & 0b00000010) moveY = 1;
-    if (direction & 0b00000001) moveY = -1;
-
-    if (isColision(oldHead.x + moveX, oldHead.y + moveY)) {
+    if (isColision(oldHead.x + move.x, oldHead.y + move.y)) {
         return false;
     }
-    if ((oldHead.x + moveX) == foodXpos && (oldHead.y + moveY) == foodYpos) {
+    if ((oldHead.x + move.x) == foodXpos && (oldHead.y + move.y) == foodYpos) {
         grow = 5;
         spawnFood();
+        snakeLevel++;
+        drawSnakeLevel();
     }
 
-    snakeBodyBuffer[headIndex] = {oldHead.x + moveX, oldHead.y + moveY};
+    snakeBodyBuffer[headIndex] = {oldHead.x + move.x, oldHead.y + move.y};
     miniScreenDraw(snakeBodyBuffer[headIndex].x, snakeBodyBuffer[headIndex].y);
     return true;
 }
@@ -71,19 +88,16 @@ bool SnakeGame::play() {
         snakeBodyBuffer[i] = {0, 0};
     }
 
-    snakeBodyBuffer[0].x = 2;
-    snakeBodyBuffer[0].y = 2;
-    
-    snakeBodyBuffer[1].x = 2;
-    snakeBodyBuffer[1].y = 3;
-
-    snakeBodyBuffer[2].x = 2;
-    snakeBodyBuffer[2].y = 4;
+    snakeBodyBuffer[0] = {2, 2};    
+    snakeBodyBuffer[1] = {2, 3};
+    snakeBodyBuffer[2] = {2, 4};
 
     headIndex = 2;
     tailIndex = 0;
     direction = 0b00000010;
     grow = 0;
+    snakeLevel = 0;
+    drawSnakeLevel();
 
     //draw initial snake
     for (int i = 0; i < 3; i++) {
@@ -99,7 +113,11 @@ bool SnakeGame::play() {
         tm.setLEDs(direction << 8);;
         uint8_t newDirection = getButtons() & 0b00001111;
         if (newDirection != 0) {
-            direction = newDirection;
+            Direction dir = bitesDirectionToStruct(direction);
+            Direction newDir = bitesDirectionToStruct(newDirection);
+            if ((dir.x - newDir.x) != 0 && (dir.y - newDir.y) != 0) {
+                direction = newDirection;
+            }
         }
 
         if (lastUpdate + 500 < millis()) {
