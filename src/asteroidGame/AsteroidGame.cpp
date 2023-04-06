@@ -1,12 +1,9 @@
 #include "AsteroidGame.h"
 #include <global.h>
 
-
-long lastMilis = millis();
 void AsteroidGame::setup() {
     lcd.clear();
     setupAsteroids();
-    lastMilis = millis();
     Rocket rocket;
     Music music;
 }
@@ -20,6 +17,7 @@ void AsteroidGame::loop() {
             if (noAsteroidsLeft()) {
                 music.stopMusic();
                 nextLevel();
+                return;
             }
         }
         

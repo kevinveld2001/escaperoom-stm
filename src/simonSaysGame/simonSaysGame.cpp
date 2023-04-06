@@ -62,6 +62,7 @@ void SimonSaysGame::setup() {
 void SimonSaysGame::loop() {
     if (level == 8) {
         nextLevel();
+        return;
     }
     if (areButtonsPressedEvent(gameLevel[pressIndex], true)) {
         pressIndex++;

@@ -25,11 +25,13 @@ void Menu::loop() {
 
     if (areButtonsPressedEvent(0b00000100, true)) {
         nextLevel();
+        return;
     }
     extern int currentLevelIndex;
     if (areButtonsPressedEvent(0b00001000, true)) {
         currentLevelIndex++;
         nextLevel();
+        return;
     }
 
     buttonScanLoop();

@@ -8,6 +8,7 @@ class AsteroidGame: public Playable {
 private:
     Rocket rocket;
     Music music;
+    long lastMilis = millis();
 public:
     void setup() override;
     void loop() override;

@@ -19,10 +19,10 @@ void setupAsteroids() {
     drawAsteroids();
     gameOver = false;
 }
-
+     
 void drawAsteroids() {
-    for (int i; i < levelSize; i++) {
-        Asteroid& asteroid = asteroids[i];
+    for (int i = 0; i < levelSize; i++) {
+        Asteroid& asteroid = asteroids[i];        
         if (!asteroid.outOfScreen) {
             asteroid.x--;
             
