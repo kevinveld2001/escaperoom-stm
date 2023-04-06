@@ -30,6 +30,7 @@ void initGame() {
     switch (currentLevelIndex)
     {
     case 0:
+        printLevel(0, 0, "Escape the room");
         currentLevel = new Menu();
         break;
     case 1:

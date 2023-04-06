@@ -52,17 +52,6 @@ bool checkGameOver(u_int8_t rocketPos) {
                    || (asteroids[i].sprite == sprite_high && !rocketPos&1)
                    || (asteroids[i].sprite == sprite_low && rocketPos&1)
                 )) {
-                for (int b = 0; b < 5; b++) {
-                    lcd.noBacklight();
-                    delay(100);
-                    lcd.backlight();
-                    delay(100);
-                }
-                delay(200);
-                lcd.clear();
-                lcd.setCursor(0, 0);
-                lcd.print("  GAME OVER!!! ");
-
                 gameOver = true;
             }
         }
