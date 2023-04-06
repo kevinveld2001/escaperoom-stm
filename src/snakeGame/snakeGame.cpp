@@ -2,21 +2,26 @@
 #include <global.h>
 #include "miniScreen.h"
 #include "utils/buttons/buttons.h"
+#include <Arduino.h>
+
+#define SNAKE_SIZE 100
 
 struct SnakeBody {
     int x;
     int y;
 };
 
-#define SNAKE_SIZE 100
+int foodXpos = 0;
+int foodYpos = 0;
+
 
 SnakeBody snakeBodyBuffer[SNAKE_SIZE];
-int headIndex;
-int tailIndex;
-u_int8_t direction;
+u_int8_t direction = 0b00000010;
 u_int8_t grow = 0;
+int headIndex = 2;
+int tailIndex = 0;
 
-void moveSnake() {
+bool SnakeGame::moveSnake() {
     if (grow == 0) {
         SnakeBody oldSnakeBody = snakeBodyBuffer[tailIndex];
         miniScreenRemove(oldSnakeBody.x, oldSnakeBody.y);
@@ -35,8 +40,17 @@ void moveSnake() {
     if (direction & 0b00000010) moveY = 1;
     if (direction & 0b00000001) moveY = -1;
 
+    if (isColision(oldHead.x + moveX, oldHead.y + moveY)) {
+        return false;
+    }
+    if ((oldHead.x + moveX) == foodXpos && (oldHead.y + moveY) == foodYpos) {
+        grow = 5;
+        spawnFood();
+    }
+
     snakeBodyBuffer[headIndex] = {oldHead.x + moveX, oldHead.y + moveY};
     miniScreenDraw(snakeBodyBuffer[headIndex].x, snakeBodyBuffer[headIndex].y);
+    return true;
 }
 
 
@@ -52,20 +66,32 @@ bool SnakeGame::play() {
 
     miniScreenInit();
 
-    snakeBodyBuffer[0] = {1, 0};
-    snakeBodyBuffer[1] = {2, 0};
-    snakeBodyBuffer[2] = {3, 0};
+    //clear snake buffer
+    for (int i = 0; i < SNAKE_SIZE; i++) {
+        snakeBodyBuffer[i] = {0, 0};
+    }
+
+    snakeBodyBuffer[0].x = 2;
+    snakeBodyBuffer[0].y = 2;
+    
+    snakeBodyBuffer[1].x = 2;
+    snakeBodyBuffer[1].y = 3;
+
+    snakeBodyBuffer[2].x = 2;
+    snakeBodyBuffer[2].y = 4;
+
+    headIndex = 2;
+    tailIndex = 0;
+    direction = 0b00000010;
+    grow = 0;
 
     //draw initial snake
     for (int i = 0; i < 3; i++) {
         miniScreenDraw(snakeBodyBuffer[i].x, snakeBodyBuffer[i].y);
     }
 
-    headIndex = 3;
-    tailIndex = 0;
+    spawnFood();
 
-    direction = 0b00001000;
-    
     long lastUpdate = millis();
     //loop
     while (true) {
@@ -78,16 +104,46 @@ bool SnakeGame::play() {
 
         if (lastUpdate + 500 < millis()) {
             lastUpdate = millis();
-            moveSnake();
+            if (!moveSnake()) {
+                return false;
+            }
         }
-
-        if (areButtonsPressedEvent(0b10000000, true)) {
-            grow = 3;
-        }
-        
         
         buttonScanLoop();
     }
 
     return true;
+}
+
+bool SnakeGame::isColision(int x, int y) {
+    if (x < 0 || x > 19 || y < 0 || y > 15) return true;
+
+    for (int i = 0; i < SNAKE_SIZE; i++) {
+
+        //check if i is in snake if so set inSnakeCheck to true
+        bool inSnakeCheck = false;
+
+        if (headIndex < tailIndex) {
+            if (i >= tailIndex || i <= headIndex) {
+                inSnakeCheck = true;
+            }
+        } else {
+            if (i >= tailIndex && i <= headIndex) {
+                inSnakeCheck = true;
+            }
+        }
+
+        if (inSnakeCheck && snakeBodyBuffer[i].x == x && snakeBodyBuffer[i].y == y) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void SnakeGame::spawnFood() {
+    foodXpos = random(4, 18);
+    foodYpos = random(2, 14);
+
+    miniScreenDraw(foodXpos, foodYpos);
 }
