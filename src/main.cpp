@@ -9,6 +9,7 @@
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 TM1638plus tm(TM_STROBE, TM_CLOCK, TM_DIO);
+u_int8_t gameDifficulty = 0;
 
 void setup() {
   lcd.init();
