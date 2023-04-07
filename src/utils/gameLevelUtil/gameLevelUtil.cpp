@@ -3,9 +3,10 @@
 #include "menu.h"
 #include "levelPrinter.h"
 
-#include "./asteroidGame/asteroidGame.h"
-#include "./simonSaysGame/simonSaysGame.h"
-#include "./snakeGame/snakeGame.h"
+#include "gameOverScreen/gameOverScreen.h"
+#include "asteroidGame/asteroidGame.h"
+#include "simonSaysGame/simonSaysGame.h"
+#include "snakeGame/snakeGame.h"
 
 //define initGame
 void initGame();
@@ -13,12 +14,18 @@ void initGame();
 Playable* currentLevel = new Menu();
 int currentLevelIndex = 0;
 
+u_int8_t lifes = 5;
+
 void nextLevel() {
     currentLevelIndex++;
     initGame();
 }
 
 void setGameOver() {
+    lifes--;
+    if (lifes <= 0) {
+        currentLevelIndex = -1;
+    }
     initGame();
 }
 long timeTillGameStart = 0;
@@ -29,24 +36,28 @@ void initGame() {
 
     switch (currentLevelIndex)
     {
+    case -1:
+        currentLevel = new GameOverScreen();
+        return;
+        break;
     case 0:
-        printLevel(0, 0, "Escape the room");
+        printLevel(0, 0, "Escape the room", lifes);
         currentLevel = new Menu();
         break;
     case 1:
-        printLevel(1, 3, "Asteroids");
+        printLevel(1, 3, "Asteroids", lifes);
         currentLevel = new AsteroidGame();
         break;
     case 2:
-        printLevel(2, 3, "Simon Says");
+        printLevel(2, 3, "Simon Says", lifes);
         currentLevel = new SimonSaysGame();
         break;
     case 3:
-        printLevel(3, 5, "Snake");
+        printLevel(3, 5, "Snake", lifes);
         currentLevel = new SnakeGame();
         break;
     case 4:
-        printLevel(4, 1, "Number Station");
+        printLevel(4, 1, "Number Station", lifes);
         break;
     }
     timeTillGameStart = millis() + 2000;
