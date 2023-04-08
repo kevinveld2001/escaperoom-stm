@@ -1,10 +1,6 @@
 #include <Arduino.h>
 #include <LiquidCrystal_I2C.h>
 #include "global.h"
-// #include "asteroidGame/asteroidGame.h"
-// #include "simonSaysGame/simonSaysGame.h"
-// #include "snakeGame/snakeGame.h"
-// #include "numberStationGame/numberStationGame.h"
 #include "utils/gameLevelUtil/gameLevelUtil.h"
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);

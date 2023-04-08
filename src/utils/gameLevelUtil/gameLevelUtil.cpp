@@ -2,6 +2,7 @@
 #include "playable.h"
 #include "menu.h"
 #include "levelPrinter.h"
+#include "utils/counter/counter.h"
 
 #include "gameOverScreen/gameOverScreen.h"
 #include "asteroidGame/asteroidGame.h"
@@ -18,6 +19,11 @@ u_int8_t lifes = 5;
 
 void nextLevel() {
     currentLevelIndex++;
+    initGame();
+}
+
+void timeUp() {
+    currentLevelIndex = -1;
     initGame();
 }
 
@@ -38,6 +44,7 @@ void initGame() {
     {
     case -1:
         currentLevel = new GameOverScreen();
+        hasRunSetup = false;
         return;
         break;
     case 0:
@@ -65,6 +72,7 @@ void initGame() {
 }
 
 void runLoop() {
+    displayCounter();
     if (millis() < timeTillGameStart) {
         return;
     }

@@ -19,5 +19,6 @@ extern LiquidCrystal_I2C lcd;
 
 void nextLevel();
 void setGameOver();
+void timeUp();
 
 extern u_int8_t gameDifficulty;

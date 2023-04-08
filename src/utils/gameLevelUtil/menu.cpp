@@ -1,6 +1,7 @@
 #include "menu.h"
 #include <global.h>
 #include "./utils/buttons/buttons.h"
+#include "utils/counter/counter.h"
 
 byte arrow[] = {
   B00000,
@@ -53,6 +54,7 @@ void Menu::loop() {
 
     if (areButtonsPressedEvent(0b00001100, false)) {
         nextLevel();
+        startCounter();
     }
 
     buttonScanLoop();
