@@ -2,6 +2,8 @@
 #include "../utils/buttons/buttons.h"
 #include <global.h>
 
+u_int8_t levelNeeded = 8;
+
 int level = 0;
 void printLevel() {
     lcd.clear();
@@ -10,7 +12,8 @@ void printLevel() {
     lcd.setCursor(6, 1);
     lcd.print(level );
     lcd.setCursor(7, 1);
-    lcd.print("/8");
+    lcd.print("/");
+    lcd.print(levelNeeded);
 }
 
 u_int8_t gameLevel[8]; 
@@ -56,6 +59,8 @@ uint8_t pressIndex = 0;
 void SimonSaysGame::setup() {
     level = 0;
     pressIndex = 0;
+    if (gameDifficulty == 0) levelNeeded = 8;
+    if (gameDifficulty == 1) levelNeeded = 10;
     addRandomStepToGame();
     printLevel();
     printGameLevel();
@@ -89,7 +94,7 @@ void SimonSaysGame::loop() {
         return;
     }
 
-    if (level == 8) {
+    if (level == levelNeeded) {
         nextLevel();
         return;
     }
@@ -124,7 +129,7 @@ void SimonSaysGame::loop() {
     if (pressIndex == level) {
         addRandomStepToGame();
         printLevel();
-        if (level != 8) 
+        if (level != levelNeeded) 
             printGameLevel();
 
         pressIndex = 0;

@@ -24,7 +24,9 @@ int tailIndex = 0;
 
 void drawSnakeLevel() {
     lcd.setCursor(6, 1);
-    lcd.printf("Level: %02d", snakeLevel);
+    int neededPoints = 5;
+    if (gameDifficulty == 1) neededPoints = 9;
+    lcd.printf("Level: %d/%d", snakeLevel, neededPoints);
 }
 
 struct Direction {
@@ -63,6 +65,7 @@ bool SnakeGame::moveSnake() {
         spawnFood();
         snakeLevel++;
         drawSnakeLevel();
+        checkNextLevel();
     }
 
     snakeBodyBuffer[headIndex] = {oldHead.x + move.x, oldHead.y + move.y};
@@ -158,6 +161,18 @@ bool SnakeGame::isColision(int x, int y) {
 void SnakeGame::spawnFood() {
     foodXpos = random(4, 18);
     foodYpos = random(2, 14);
+    while (isColision(foodXpos, foodYpos)) {
+        foodXpos = random(4, 18);
+        foodYpos = random(2, 14);
+    }
 
     miniScreenDraw(foodXpos, foodYpos);
+}
+
+void SnakeGame::checkNextLevel() {
+    int neededPoints = 5;
+    if (gameDifficulty == 1) neededPoints = 9;
+    if (snakeLevel == neededPoints) { 
+        nextLevel();
+    }
 }
