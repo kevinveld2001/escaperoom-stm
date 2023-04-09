@@ -5,9 +5,11 @@
 #include "utils/counter/counter.h"
 
 #include "gameOverScreen/gameOverScreen.h"
+#include "gameWonScreen/gameWonScreen.h"
 #include "asteroidGame/asteroidGame.h"
 #include "simonSaysGame/simonSaysGame.h"
 #include "snakeGame/snakeGame.h"
+#include "numberStationGame/numberStationGame.h"
 
 //define initGame
 void initGame();
@@ -65,6 +67,12 @@ void initGame() {
         break;
     case 4:
         printLevel(4, 1, "Number Station", lifes);
+        currentLevel = new NumberStationGame();
+        break;
+    case 5:
+        currentLevel = new GameWonScreen();
+        hasRunSetup = false;
+        return;
         break;
     }
     timeTillGameStart = millis() + 2000;

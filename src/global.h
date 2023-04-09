@@ -22,3 +22,7 @@ void setGameOver();
 void timeUp();
 
 extern u_int8_t gameDifficulty;
+
+
+#define RADIO_FREQUENCY 526000
+#define RADIO_PIN 9

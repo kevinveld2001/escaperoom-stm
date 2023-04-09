@@ -14,10 +14,15 @@ void setup() {
   tm.displayBegin();
 
   pinMode(A0, INPUT);
+  pinMode(LED_BUILTIN, OUTPUT);
 
   //A5 is reading static noise, so we use it to seed the random number generator
   pinMode(A5, INPUT);
   randomSeed(analogRead(A5));
+
+  //setup radio
+  analogWriteFrequency(RADIO_FREQUENCY);
+  analogWrite(RADIO_PIN, 0);
   
   initGame();
 }
