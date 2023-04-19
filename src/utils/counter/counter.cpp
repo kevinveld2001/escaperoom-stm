@@ -29,7 +29,6 @@ void displayCounter() {
     if (newSecondsPassed != secondsPassed || newMinutesPassed != minutesPassed) {
         secondsPassed = newSecondsPassed;
         minutesPassed = newMinutesPassed;
-        tm.reset();
         tm.displayIntNum((minutesPassed * 1000) + secondsPassed, false, TMAlignTextRight);
         tm.display7Seg(5, 0);
     }
